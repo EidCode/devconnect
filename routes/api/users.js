@@ -19,7 +19,7 @@ router.post('/register', (req, res) => {
         console.log(isValid)
         return res.status(400).json(errors)
     }
-
+    
 
     User.findOne({email: req.body.email})
     .then(user => {
@@ -27,15 +27,14 @@ router.post('/register', (req, res) => {
             errors.email = 'email is already exists';
             return res.json(errors)
         } else {
-            const avatar = gravatar.url(req.body.email, {s: '100', r: 'x', d: 'retro'}, true);
+            const avatar = gravatar.url(req.body.email, {protocol: 'http', format:'qr'});
 
             // intialit new user
             const newUser = new User({
                 name: req.body.name,
                 email: req.body.email,
                 avatar,
-                password: req.body.password,
-                password2:req.body.password2
+                password: req.body.password
             });
 
             bcrypt.genSalt(10, (err, salt) => {
@@ -44,7 +43,7 @@ router.post('/register', (req, res) => {
                     newUser.password = hash;
                     // saving new user
                     newUser.save()
-                    .then(user => res.json(user))
+                    .then(user => (res.json(user)))
                     .catch(err => console.log(err))
                 })
             })
@@ -64,6 +63,7 @@ router.post('/login', (req, res) => {
 
     const email = req.body.email;
     const password = req.body.password;
+    
 
     User.findOne({email}).then(user => {
         if(!user) {

@@ -13,23 +13,24 @@ module.exports = function validateRegisterInput(data) {
     }
 
     if(validator.isEmpty(data.name)) {
-        errors.name = 'name field is required'
+        errors.name = 'name field is require'
     }
 
-    if(validator.isEmpty(data.email)) {
-        errors.email = 'email field is required'
-    }
-
+    
     if(!validator.isEmail(data.email)) {
         errors.email = 'this format is not look like email'
     }
+    if(validator.isEmpty(data.email)) {
+        errors.email = 'email field is require'
+    }
 
     if(validator.isEmpty(data.password)) {
-        errors.password = 'password field is required'
+        errors.password = 'password field is require'
     }
-    if(validator.isEmpty(data.password2)) {
-        errors.password = 'password2 field is required'
+    if(validator.isEmpty(data.password)) {
+        errors.password2 = 'password2 field is require'
     }
+    
     if(!validator.isLength(data.password, {min: 4, max: 15})) {
         errors.passwordLength = 'password must be between 2 and 30 characters'
     }

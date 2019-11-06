@@ -14,6 +14,14 @@ import jwt_decoded from 'jwt-decode';
 import store from './store';
 import {connect} from 'react-redux';
 import CreateProfile from './components/create-profile/CreateProfile';
+import EditProfile from '../../client/src/components/update-profile/updateProfile';
+import AddExperiences from './components/add-credentials/AddExperiences';
+import AddEducation from './components/add-credentials/AddEducation';
+import Profiles from './components/profiles/Profiles';
+import Profile from './components/profile/Profile';
+import NotFound from './components/common/NotFound';
+import Posts from './components/posts/Posts';
+import Post from './components/post/Post'
 
 if(localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -37,6 +45,14 @@ function App() {
          <Route path="/register" component={Register} exact />
          <Route path='/dashboard' component={Dashboard} exact />
          <Route path='/create-profile' component={CreateProfile} exact />
+         <Route path='/edit-profile' component={EditProfile} exact />
+         <Route path='/add-experiences' component={AddExperiences} exact />
+         <Route path='/add-education' component={AddEducation} exact />
+         <Route path='/profiles' component={Profiles} exact />
+         <Route path='/profile/:handle' component={Profile} exact />
+         <Route path='/not-found' component={NotFound} exact /> 
+         <Route path="/feed" component={Posts} exact /> 
+         <Route path="/post/:id" component={Post} exact /> 
         <Footer />
       </div>
     </Router> 
@@ -45,7 +61,8 @@ function App() {
 }
 
 const mapStateToProps = (state) =>({
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile
 })
 
 export default connect(mapStateToProps)(App);

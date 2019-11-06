@@ -7,14 +7,14 @@ const validatePostInput = require('../../validation/post');
 const Profile = require('../../models/profile');
 
 
-router.get('/test', (req, res) => res.send('hellow from posts test'));
+
 
 router.get('/', (req, res) => {
     Post.find().sort({date: -1}).then(posts=> res.json(posts)).catch(err => res.json(err))
 });
 
 router.get('/:id', (req, res) => {
-    Post.findById(req.params.id).then(post=> res.json(post)).catch(err => res.json(err))
+    Post.findById(req.params.id).then(post=> res.status(200).json(post)).catch(err => res.json(err))
 });
 
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {

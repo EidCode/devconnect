@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {getCurrentProfile} from '../../actions/profileActions';
+import {getCurrentProfile, deleteProfile} from '../../actions/profileActions';
 import Spinner from '../common/spinner';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import ProfileMethods from './profileMethods';
+import DisplayExperiences from './DisplayExperiences';
+import DisplayEducations from './DisplayEducation';
+
 
 class Dashboard extends Component {
     componentDidUpdate() {
@@ -14,8 +18,13 @@ class Dashboard extends Component {
 
     componentDidMount(){
         this.props.getCurrentProfile();
+        console.log(this.props)
         
         
+    }
+
+    onDeleteClick(e) {
+        this.props.deleteProfile();
     }
     render() {
         const {profile, loading} = this.props.profile;
@@ -24,8 +33,19 @@ class Dashboard extends Component {
         if(profile === null || loading) {
             currentProfileContent = <Spinner />
         } else {
-            if(Object.keys(profile) > 0) {
-                currentProfileContent = <h4>Display Profile</h4>
+            if(Object.keys(profile).length > 0) {
+                currentProfileContent = (
+                    <div>
+                        <p className="lead text-muted"> Welcome <Link to={`/profile/${profile.handle}`}>{user.name}</Link></p>
+                        <ProfileMethods />
+                        <h3>Experiences</h3>
+                        <DisplayExperiences experiences={profile.experiences} />
+                        <h3>Education</h3>
+                        <DisplayEducations educations={profile.education} />
+                        <div style={{marginBottom: '60px'}}></div>
+                        <button onClick={this.onDeleteClick.bind(this)} className="btn btn-danger">Delete Profile</button>
+                    </div>
+                )
             } else {
                 currentProfileContent = (
                     <div>
@@ -42,6 +62,7 @@ class Dashboard extends Component {
                     <div className="row">
                         <div className="col-md-12">
                             <h1 className="display-4">Dashboard</h1>
+                            <h4>Experiences</h4>
                             {currentProfileContent}
                         </div>
                     </div>
@@ -61,4 +82,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth
 })
 
-export default connect(mapStateToProps, {getCurrentProfile})(Dashboard)
+export default connect(mapStateToProps, {getCurrentProfile, deleteProfile})(Dashboard)

@@ -17,7 +17,6 @@ router.get('/test', (req, res) => res.send('hellow from profile test'));
 // get profile
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     const errors = {};
-    console.log(req.user.id)
     Profile.findOne({user: req.user.id}).populate('user',['name','avatar'])
     .then(profile => {
         if(!profile) {
@@ -112,7 +111,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
                             errors.handle= 'handle is already exists';
                             res.status(400).json(errors)
                         }
-                        new Profile(profileFields).save().then(profile => res.json(profile))
+                        new Profile(profileFields).save().then(profile => res.json(profile)) 
                     })
             }
         })
@@ -124,7 +123,7 @@ router.post('/experiences', passport.authenticate('jwt', {session: false}), (req
     // validation part
     const { errors, isValid } = validateExperiencesInput(req.body);
     if(!isValid) {
-        return res.status(400).json(errors)
+        return res.status(404).json(errors)
     }
 
     Profile.findOne({user: req.user.id})
@@ -140,7 +139,9 @@ router.post('/experiences', passport.authenticate('jwt', {session: false}), (req
         }
 
         profile.experiences.unshift(newExperience);
-        profile.save().then(saved => res.json(saved))
+        profile.save()
+        .then(saved => res.json(saved))
+        .catch(err => res.status(404).json(errors))
     });
 });
 
@@ -192,5 +193,18 @@ router.delete('/education/:edu_id', passport.authenticate('jwt', {session: false
     })
     
 });
+
+
+router.delete('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Profile.findOneAndRemove({user: req.user.id})
+        .then(() => {
+            User.findOneAndRemove({_id: req.user.id})
+            .then(() => {
+                
+                res.json({success: true})
+            }
+            )  })
+})
+
 
 module.exports= router;

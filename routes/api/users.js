@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
+const Profile = require('./profile')
 
 // validation functions
 const validateRegisterInput = require('../../validation/register');
@@ -65,10 +66,11 @@ router.post('/login', (req, res) => {
     const password = req.body.password;
     
 
-    User.findOne({email}).then(user => {
+    User.findOne({email: email}).then(user => {
         if(!user) {
-            errors.email = 'user is not exist'
-            return res.json(errors)
+            
+            
+            return res.status(404).json({email: 'user is not exist'})
         }
 
         bcrypt.compare(password, user.password).then(isMatch => {
@@ -85,7 +87,7 @@ router.post('/login', (req, res) => {
 
             } else {
                 errors.password = 'password is not correct'
-                return res.json(errors)
+                return res.status(404).json({password: errors.password })
             }
         })
         
@@ -95,5 +97,7 @@ router.post('/login', (req, res) => {
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
     res.json(req.user);
 });
+
+
 
 module.exports= router;

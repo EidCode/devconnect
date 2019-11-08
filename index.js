@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const mongoUri = require('./config/keys').mongodbURI;
 const bodyParser= require('body-parser');
 const passport = require('passport');
+const path = require('path');
 
 //  importing routes
 const users = require('./routes/api/users');
@@ -30,7 +31,17 @@ require('./config/passport')(passport)
 app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
-app.get('/', (req, res) => res.json('hellow'))
+app.get('/', (req, res) => res.json('hellow'));
+
+
+// Heroku Part
+
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    })
+}
 
 
 const port = process.env.PORT || 5000;

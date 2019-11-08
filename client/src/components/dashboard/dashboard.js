@@ -7,15 +7,11 @@ import {Link} from 'react-router-dom';
 import ProfileMethods from './profileMethods';
 import DisplayExperiences from './DisplayExperiences';
 import DisplayEducations from './DisplayEducation';
+import isEmpty from '../../utils/isEmpty'
 
 
 class Dashboard extends Component {
-    componentDidUpdate() {
-        if(this.props.auth.isAuthenticated === false) {
-            this.props.history.push('/login')
-        } 
-    }
-
+    
     componentDidMount(){
         this.props.getCurrentProfile();
         console.log(this.props)
@@ -38,10 +34,20 @@ class Dashboard extends Component {
                     <div>
                         <p className="lead text-muted"> Welcome <Link to={`/profile/${profile.handle}`}>{user.name}</Link></p>
                         <ProfileMethods />
-                        <h3>Experiences</h3>
-                        <DisplayExperiences experiences={profile.experiences} />
-                        <h3>Education</h3>
-                        <DisplayEducations educations={profile.education} />
+                        {isEmpty(profile.experiences) ? (<h3>No Experiences Added</h3>) : (
+                            <div>
+                            <h3>Experiences</h3>
+                            <DisplayExperiences experiences={profile.experiences} />
+                            </div>
+                        )}
+                        {isEmpty(profile.education) ? (<h3>No Experiences Added</h3>) : (
+                            <div>
+                            <h3>Education</h3>
+                            <DisplayEducations educations={profile.education} />
+                            </div>
+                        )}
+                        
+                        
                         <div style={{marginBottom: '60px'}}></div>
                         <button onClick={this.onDeleteClick.bind(this)} className="btn btn-danger">Delete Profile</button>
                     </div>

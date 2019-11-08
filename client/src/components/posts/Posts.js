@@ -7,20 +7,10 @@ import {getPosts} from '../../actions/postAction';
 import PostFeeds from './PostFeeds'
 
 class Posts extends Component {
-    componentDidUpdate() {
-        if(this.props.auth.isAuthenticated === false) {
-            this.props.history.push('/login')
-        } 
-    }
+    
 
     componentDidMount(){
-        if(this.props.auth.isAuthenticated === false) {
-            this.props.history.push('/login')
-        } 
-
         this.props.getPosts();
-        
-        
     }
     render() {
         const {posts, loading} = this.props.posts;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
@@ -20,8 +20,10 @@ import AddEducation from './components/add-credentials/AddEducation';
 import Profiles from './components/profiles/Profiles';
 import Profile from './components/profile/Profile';
 import NotFound from './components/common/NotFound';
+import Post from './components/post/Post';
 import Posts from './components/posts/Posts';
-import Post from './components/post/Post'
+
+import PrivateRoute from './components/common/PrivateRouter';
 
 if(localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -43,7 +45,11 @@ function App() {
          <Route path="/" component={Landing} exact />
          <Route path="/login" component={Login} exact />
          <Route path="/register" component={Register} exact />
-         <Route path='/dashboard' component={Dashboard} exact />
+          <Switch>
+            <PrivateRoute path='/dashboard' component={Dashboard} exact />
+          </Switch>
+         
+
          <Route path='/create-profile' component={CreateProfile} exact />
          <Route path='/edit-profile' component={EditProfile} exact />
          <Route path='/add-experiences' component={AddExperiences} exact />
@@ -51,8 +57,13 @@ function App() {
          <Route path='/profiles' component={Profiles} exact />
          <Route path='/profile/:handle' component={Profile} exact />
          <Route path='/not-found' component={NotFound} exact /> 
-         <Route path="/feed" component={Posts} exact /> 
-         <Route path="/post/:id" component={Post} exact /> 
+         <Switch>
+          <PrivateRoute path="/feed" component={Posts} exact /> 
+         </Switch>
+         <Switch>
+          <PrivateRoute path="/post/:id" component={Post} exact /> 
+         </Switch>
+         
         <Footer />
       </div>
     </Router> 

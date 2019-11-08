@@ -9,17 +9,11 @@ import CommentForm from './CommentForm'
 import CommentFeed from './CommentFeed'
 class Post extends Component {
     componentDidMount() {
-        if(this.props.auth.isAuthenticated === false) {
-            this.props.history.push('/login')
-        }
+        
     
         this.props.getPost(this.props.match.params.id)
     }
-    componentDidUpdate() {
-        if(this.props.auth.isAuthenticated === false) {
-            this.props.history.push('/login')
-        } 
-    }
+    
     render() {
         const {post, loading} = this.props.posts;
         let postContent;

@@ -31,7 +31,7 @@ require('./config/passport')(passport)
 app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
-app.get('/', (req, res) => res.json('hellow'));
+
 
 
 // Heroku Part
